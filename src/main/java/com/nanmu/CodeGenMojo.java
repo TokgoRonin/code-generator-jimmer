@@ -1,8 +1,9 @@
 package com.nanmu;
 
+import com.nanmu.mapping.SqlJavaTypeMapping;
 import com.nanmu.table.FieldInfo;
 import com.nanmu.table.TableInfo;
-import com.nanmu.utils.StringUtil;
+import com.nanmu.utils.CustomStringUtil;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -10,17 +11,13 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Mojo(name = "codeGen")
 public class CodeGenMojo extends AbstractMojo {
-    public static final String SHOW_TABLE_STATUS = "SHOW TABLE STATUS WHERE Name = 'd_role'";
+    public static final String SHOW_TABLE_STATUS = "show table status";
     public static final String SHOW_TABLE_FIELDS = "show full fields from %s";
-
-
-    @Parameter(property = "greeting")
-    private String greeting;
 
     @Parameter(property = "driver")
     private String driver;
@@ -30,11 +27,13 @@ public class CodeGenMojo extends AbstractMojo {
     private String username;
     @Parameter(property = "password")
     private String password;
+    @Parameter(property = "tables")
+    private List<String> tables;
+    @Parameter(property = "tablePreFix")
+    private String tablePrefix;
 
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        this.getLog().info("hello");
-        this.getLog().info(greeting);
         this.getLog().info(driver);
         this.getLog().info(url);
         this.getLog().info(username);
@@ -46,6 +45,13 @@ public class CodeGenMojo extends AbstractMojo {
             tableInfoList.forEach(tableInfo -> {
                 List<FieldInfo> fieldInfoList = getFieldInfoList(connection, tableInfo.getSqlName());
                 tableInfo.setFieldInfoList(fieldInfoList);
+
+                Set<String> fieldTypeSet = fieldInfoList.stream().map(FieldInfo::getJavaType)
+                                                        .collect(Collectors.toSet());
+                tableInfo.setHaveLocalDate(fieldTypeSet.contains("LocalDate"));
+                tableInfo.setHaveLocalTime(fieldTypeSet.contains("LocalTime"));
+                tableInfo.setHaveLocalDateTime(fieldTypeSet.contains("LocalDateTime"));
+                tableInfo.setHaveBigDecimal(fieldTypeSet.contains("BigDecimal"));
                 this.getLog().info("table info : " + tableInfo);
             });
         } catch (SQLException e) {
@@ -57,11 +63,24 @@ public class CodeGenMojo extends AbstractMojo {
 
     private List<TableInfo> getTableInfoList(Connection connection) {
         List<TableInfo> tableInfoList = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(SHOW_TABLE_STATUS); ResultSet rs = ps.executeQuery()) {
+
+        StringBuilder sqlBuilder = new StringBuilder(SHOW_TABLE_STATUS);
+        if (Objects.nonNull(tables) && !tables.isEmpty()) {
+            String tableNames = tables.stream().map(name -> "'" + name + "'").collect(Collectors.joining(", "));
+            sqlBuilder.append(" WHERE Name in ( ").append(tableNames).append(" )");
+        }
+        this.getLog().info("query table status sql : " + sqlBuilder);
+        try (PreparedStatement ps = connection.prepareStatement(sqlBuilder.toString()); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 String tableName = rs.getString("name");
-                String javaName = StringUtil.toCamelCase(tableName);
+                // 生成的实体接口过滤表前缀
+                String javaName;
+                if (Objects.nonNull(tablePrefix) && tablePrefix.length() > 0) {
+                    javaName = CustomStringUtil.toCamelCase(tableName.replaceFirst(tablePrefix, ""));
+                } else {
+                    javaName = CustomStringUtil.toCamelCase(tableName);
+                }
                 String tableComment = rs.getString("comment");
 
                 TableInfo tableInfo = new TableInfo();
@@ -84,14 +103,18 @@ public class CodeGenMojo extends AbstractMojo {
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 String fieldName = rs.getString("field");
-                String javaName = StringUtil.toCamelCase(fieldName);
+                String javaName = CustomStringUtil.toCamelCase(fieldName);
                 String type = rs.getString("type");
+                if (type.indexOf("(") > 0) {
+                    type = type.substring(0, type.indexOf("("));
+                }
+                String javaType = SqlJavaTypeMapping.TYPE.get(type);
                 boolean nullAble = rs.getBoolean("null");
                 String comment = rs.getString("comment");
 
                 FieldInfo fieldInfo = new FieldInfo();
                 fieldInfo.setSqlType(type);
-                fieldInfo.setJavaType("");
+                fieldInfo.setJavaType(javaType);
                 fieldInfo.setSqlName(fieldName);
                 fieldInfo.setJavaName(javaName);
                 fieldInfo.setComment(comment);
@@ -104,4 +127,5 @@ public class CodeGenMojo extends AbstractMojo {
         }
         return fieldInfoList;
     }
+
 }

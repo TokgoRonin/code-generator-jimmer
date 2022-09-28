@@ -1,6 +1,5 @@
 package com.nanmu.table;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class TableInfo {
@@ -8,8 +7,9 @@ public class TableInfo {
     private String javaName;
     private String comment;
     private List<FieldInfo> fieldInfoList;
-    private Boolean haveDate;
-    private Boolean haveDateTime;
+    private Boolean haveLocalDate;
+    private Boolean haveLocalTime;
+    private Boolean haveLocalDateTime;
     private Boolean haveBigDecimal;
 
     public String getSqlName() {
@@ -44,20 +44,28 @@ public class TableInfo {
         this.fieldInfoList = fieldInfoList;
     }
 
-    public Boolean getHaveDate() {
-        return haveDate;
+    public Boolean getHaveLocalDate() {
+        return haveLocalDate;
     }
 
-    public void setHaveDate(Boolean haveDate) {
-        this.haveDate = haveDate;
+    public void setHaveLocalDate(Boolean haveLocalDate) {
+        this.haveLocalDate = haveLocalDate;
     }
 
-    public Boolean getHaveDateTime() {
-        return haveDateTime;
+    public Boolean getHaveLocalTime() {
+        return haveLocalTime;
     }
 
-    public void setHaveDateTime(Boolean haveDateTime) {
-        this.haveDateTime = haveDateTime;
+    public void setHaveLocalTime(Boolean haveLocalTime) {
+        this.haveLocalTime = haveLocalTime;
+    }
+
+    public Boolean getHaveLocalDateTime() {
+        return haveLocalDateTime;
+    }
+
+    public void setHaveLocalDateTime(Boolean haveLocalDateTime) {
+        this.haveLocalDateTime = haveLocalDateTime;
     }
 
     public Boolean getHaveBigDecimal() {
@@ -75,8 +83,9 @@ public class TableInfo {
                 ", javaName='" + javaName + '\'' +
                 ", comment='" + comment + '\'' +
                 ", fieldInfoList=" + fieldInfoList +
-                ", haveDate=" + haveDate +
-                ", haveDateTime=" + haveDateTime +
+                ", haveLocalDate=" + haveLocalDate +
+                ", haveLocalTime=" + haveLocalTime +
+                ", haveLocalDateTime=" + haveLocalDateTime +
                 ", haveBigDecimal=" + haveBigDecimal +
                 '}';
     }
