@@ -5,10 +5,14 @@ import com.nanmu.table.FieldInfo;
 import com.nanmu.table.TableInfo;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityWriter {
+    private static final String DATE_NOW = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                                                            .format(LocalDateTime.now());
 
     public static void genEntity(TableInfo tableInfo, String sourcePath, String packagePath) {
         List<FieldInfo> fieldInfoList = tableInfo.getFieldInfoList();
@@ -89,7 +93,7 @@ public class EntityWriter {
                     bw.write("\t" + idType + " " + javaName + "();");
                     bw.newLine();
                     bw.newLine();
-                }else {
+                } else {
                     Boolean nullable = fieldInfo.getNullAble();
                     if (nullable) {
                         bw.write("\t@Nullable");
@@ -128,6 +132,23 @@ public class EntityWriter {
             bw.write("import org.babyfish.jimmer.sql.MappedSuperclass;");
             bw.newLine();
             bw.newLine();
+            bw.write("/**");
+            bw.newLine();
+            bw.write(" * ");
+            bw.newLine();
+            bw.write(" * " + "<p>");
+            bw.newLine();
+            bw.write(" * " + "自动生成的base接口，用于写关联关系，每次生成不会覆盖此文件。");
+            bw.newLine();
+            bw.write(" * " + "</p>");
+            bw.newLine();
+            bw.write(" * ");
+            bw.newLine();
+            bw.write(" * " + "@Date " + DATE_NOW);
+            bw.newLine();
+            bw.write(" */");
+            bw.newLine();
+
             bw.write("@MappedSuperclass");
             bw.newLine();
             bw.write("public interface " + name + "Base {");
