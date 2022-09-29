@@ -6,6 +6,8 @@ import java.util.Map;
 public class SqlJavaTypeMapping {
     public static final Map<String, String> TYPE = new HashMap<>();
 
+    public static final Map<String, String> ID_TYPE = new HashMap<>();
+
     static {
         // 字符串类型
         TYPE.put("char", "String");
@@ -34,6 +36,11 @@ public class SqlJavaTypeMapping {
         TYPE.put("blob", "byte[]");
         TYPE.put("mediumblob", "byte[]");
         TYPE.put("longblob", "byte[]");
+
+        ID_TYPE.put("Integer", "int");
+        ID_TYPE.put("Long", "long");
+        ID_TYPE.put("Float", "float");
+        ID_TYPE.put("Double", "double");
     }
 
 }
