@@ -1,5 +1,6 @@
 package com.nanmu.writers;
 
+import com.nanmu.interfaces.GeneratorWriter;
 import com.nanmu.mapping.SqlJavaTypeMapping;
 import com.nanmu.table.FieldInfo;
 import com.nanmu.table.TableInfo;
@@ -10,11 +11,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EntityWriter {
+public class EntityWriter implements GeneratorWriter {
     private static final String DATE_NOW = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                                                             .format(LocalDateTime.now());
 
-    public static void genEntity(TableInfo tableInfo, String sourcePath, String packagePath) {
+    public void generate(String sourcePath, String packagePath, List<TableInfo> tableInfoList) {
+        // 先生成目录
+        String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator);
+        File folder = new File(folderPath);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        // 遍历生成entity
+        for (TableInfo tableInfo : tableInfoList) {
+            String javaName = tableInfo.getJavaName();
+            genParentEntity(javaName, sourcePath, packagePath);
+            genEntity(tableInfo, sourcePath, packagePath);
+        }
+    }
+
+
+    public void genEntity(TableInfo tableInfo, String sourcePath, String packagePath) {
         List<FieldInfo> fieldInfoList = tableInfo.getFieldInfoList();
         String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator);
         String jvaName = tableInfo.getJavaName();
@@ -90,9 +107,11 @@ public class EntityWriter {
                     bw.write("\t@Column(name = \"" + sqlName + "\")");
                     bw.newLine();
                     String idType = SqlJavaTypeMapping.ID_TYPE.get(javaType);
-                    bw.write("\t" + idType + " " + javaName + "();");
-                    bw.newLine();
-                    bw.newLine();
+                    if (idType != null) {
+                        bw.write("\t" + idType + " " + javaName + "();");
+                    } else {
+                        bw.write("\t" + javaType + " " + javaName + "();");
+                    }
                 } else {
                     Boolean nullable = fieldInfo.getNullAble();
                     if (nullable) {
@@ -104,9 +123,9 @@ public class EntityWriter {
                         bw.newLine();
                     }
                     bw.write("\t" + javaType + " " + javaName + "();");
-                    bw.newLine();
-                    bw.newLine();
                 }
+                bw.newLine();
+                bw.newLine();
             }
 
             bw.write("}");
@@ -117,7 +136,7 @@ public class EntityWriter {
         }
     }
 
-    public static void genParentEntity(String name, String sourcePath, String packagePath) {
+    public void genParentEntity(String name, String sourcePath, String packagePath) {
         String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator);
         String entityName = name + "Base.java";
         File entityFile = new File(folderPath, entityName);
