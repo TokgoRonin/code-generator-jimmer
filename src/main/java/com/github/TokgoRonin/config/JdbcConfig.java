@@ -1,6 +1,4 @@
-package com.nanmu.config;
-
-import org.apache.maven.plugins.annotations.Parameter;
+package com.github.TokgoRonin.config;
 
 public class JdbcConfig {
     private String driver;

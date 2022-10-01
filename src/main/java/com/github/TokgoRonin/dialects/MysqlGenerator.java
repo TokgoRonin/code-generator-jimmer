@@ -1,10 +1,10 @@
-package com.nanmu.dialects;
+package com.github.TokgoRonin.dialects;
 
-import com.nanmu.interfaces.Generator;
-import com.nanmu.mapping.SqlJavaTypeMapping;
-import com.nanmu.table.FieldInfo;
-import com.nanmu.table.TableInfo;
-import com.nanmu.utils.CustomStringUtil;
+import com.github.TokgoRonin.interfaces.Generator;
+import com.github.TokgoRonin.mapping.SqlJavaTypeMapping;
+import com.github.TokgoRonin.table.FieldInfo;
+import com.github.TokgoRonin.table.TableInfo;
+import com.github.TokgoRonin.utils.CustomStringUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

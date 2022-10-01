@@ -1,4 +1,4 @@
-package com.nanmu.table;
+package com.github.TokgoRonin.table;
 
 import java.util.List;
 

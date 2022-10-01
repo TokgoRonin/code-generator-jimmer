@@ -1,4 +1,4 @@
-package com.nanmu.mapping;
+package com.github.TokgoRonin.mapping;
 
 import java.util.HashMap;
 import java.util.Map;

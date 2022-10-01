@@ -1,24 +1,19 @@
-package com.nanmu;
+package com.github.TokgoRonin;
 
-import com.nanmu.config.JdbcConfig;
-import com.nanmu.dialects.MysqlGenerator;
-import com.nanmu.interfaces.Generator;
-import com.nanmu.interfaces.GeneratorWriter;
-import com.nanmu.mapping.SqlJavaTypeMapping;
-import com.nanmu.table.FieldInfo;
-import com.nanmu.table.TableInfo;
-import com.nanmu.utils.CustomStringUtil;
-import com.nanmu.writers.EntityWriter;
+import com.github.TokgoRonin.dialects.MysqlGenerator;
+import com.github.TokgoRonin.interfaces.GeneratorWriter;
+import com.github.TokgoRonin.config.JdbcConfig;
+import com.github.TokgoRonin.interfaces.Generator;
+import com.github.TokgoRonin.table.TableInfo;
+import com.github.TokgoRonin.writers.EntityWriter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Mojo(name = "codeGen")
 public class CodeGenMojo extends AbstractMojo {

@@ -1,4 +1,4 @@
-package com.nanmu.table;
+package com.github.TokgoRonin.table;
 
 public class FieldInfo {
     private String sqlType;

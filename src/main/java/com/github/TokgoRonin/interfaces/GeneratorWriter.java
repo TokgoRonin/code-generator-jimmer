@@ -1,6 +1,6 @@
-package com.nanmu.interfaces;
+package com.github.TokgoRonin.interfaces;
 
-import com.nanmu.table.TableInfo;
+import com.github.TokgoRonin.table.TableInfo;
 
 import java.util.List;
 

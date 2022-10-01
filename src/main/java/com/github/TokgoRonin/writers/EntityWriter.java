@@ -1,9 +1,9 @@
-package com.nanmu.writers;
+package com.github.TokgoRonin.writers;
 
-import com.nanmu.interfaces.GeneratorWriter;
-import com.nanmu.mapping.SqlJavaTypeMapping;
-import com.nanmu.table.FieldInfo;
-import com.nanmu.table.TableInfo;
+import com.github.TokgoRonin.interfaces.GeneratorWriter;
+import com.github.TokgoRonin.mapping.SqlJavaTypeMapping;
+import com.github.TokgoRonin.table.FieldInfo;
+import com.github.TokgoRonin.table.TableInfo;
 
 import java.io.*;
 import java.time.LocalDateTime;

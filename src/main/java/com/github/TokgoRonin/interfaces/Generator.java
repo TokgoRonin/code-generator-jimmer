@@ -1,7 +1,7 @@
-package com.nanmu.interfaces;
+package com.github.TokgoRonin.interfaces;
 
-import com.nanmu.table.FieldInfo;
-import com.nanmu.table.TableInfo;
+import com.github.TokgoRonin.table.FieldInfo;
+import com.github.TokgoRonin.table.TableInfo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
