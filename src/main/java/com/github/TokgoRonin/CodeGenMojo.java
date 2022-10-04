@@ -1,10 +1,10 @@
 package com.github.TokgoRonin;
 
 import com.github.TokgoRonin.dialects.MysqlGenerator;
-import com.github.TokgoRonin.interfaces.GeneratorWriter;
 import com.github.TokgoRonin.config.JdbcConfig;
 import com.github.TokgoRonin.interfaces.Generator;
 import com.github.TokgoRonin.table.TableInfo;
+import com.github.TokgoRonin.writers.DaoWriter;
 import com.github.TokgoRonin.writers.EntityWriter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -21,7 +21,8 @@ public class CodeGenMojo extends AbstractMojo {
     public static final String SHOW_TABLE_FIELDS = "show full fields from %s";
 
     private Generator generator;
-    private final GeneratorWriter generatorWriter = new EntityWriter();
+    private final EntityWriter entityWriter = new EntityWriter();
+    private final DaoWriter daoWriter = new DaoWriter();
 
     @Parameter(property = "tables")
     private LinkedList<String> tables;
@@ -33,7 +34,8 @@ public class CodeGenMojo extends AbstractMojo {
     private String sourcePath;
     @Parameter
     private JdbcConfig jdbcConfig;
-
+    @Parameter
+    private boolean daos;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         String url = jdbcConfig.getUrl();
@@ -45,13 +47,17 @@ public class CodeGenMojo extends AbstractMojo {
         } catch (ClassNotFoundException e) {
             this.getLog().error("获取数据库驱动失败:" + e);
         }
-        try(Connection connection = DriverManager.getConnection(url, username, password);) {
+        try (Connection connection = DriverManager.getConnection(url, username, password);) {
             if (driver.toLowerCase().contains("mysql")) {
                 generator = new MysqlGenerator();
                 // 读取表信息
                 List<TableInfo> tableInfoList = generator.getTableInfoList(connection, tables, tablePrefix);
                 // 生成entity
-                generatorWriter.generate(sourcePath, packagePath, tableInfoList);
+                entityWriter.generate(sourcePath, packagePath, tableInfoList);
+                // 生成dao
+                if (daos) {
+                    daoWriter.generate(sourcePath, packagePath, tableInfoList);
+                }
             } else {
                 this.getLog().error("暂不支持该数据库类型。");
             }

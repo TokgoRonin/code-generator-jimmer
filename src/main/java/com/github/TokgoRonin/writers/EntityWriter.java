@@ -12,12 +12,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityWriter implements GeneratorWriter {
-    private static final String DATE_NOW = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                                                            .format(LocalDateTime.now());
+    private static final String DATE_NOW = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
 
     public void generate(String sourcePath, String packagePath, List<TableInfo> tableInfoList) {
         // 先生成目录
-        String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator);
+        String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator) + File.separator + "entity" + File.separator;
         File folder = new File(folderPath);
         if (!folder.exists()) {
             folder.mkdirs();
@@ -25,22 +24,21 @@ public class EntityWriter implements GeneratorWriter {
         // 遍历生成entity
         for (TableInfo tableInfo : tableInfoList) {
             String javaName = tableInfo.getJavaName();
-            genParentEntity(javaName, sourcePath, packagePath);
-            genEntity(tableInfo, sourcePath, packagePath);
+            genParentEntity(javaName, folderPath, packagePath);
+            genEntity(tableInfo, folderPath, packagePath);
         }
     }
 
 
-    public void genEntity(TableInfo tableInfo, String sourcePath, String packagePath) {
+    public void genEntity(TableInfo tableInfo, String path, String packagePath) {
         List<FieldInfo> fieldInfoList = tableInfo.getFieldInfoList();
-        String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator);
         String jvaName = tableInfo.getJavaName();
         String entityName = jvaName + ".java";
-        File entityFile = new File(folderPath, entityName);
+        File entityFile = new File(path, entityName);
 
         try (FileWriter fw = new FileWriter(entityFile); BufferedWriter bw = new BufferedWriter(fw)) {
             // 包名
-            bw.write("package " + packagePath + ";");
+            bw.write(String.format("package %s.entity;", packagePath));
 
             // 空行
             bw.newLine();
@@ -136,16 +134,15 @@ public class EntityWriter implements GeneratorWriter {
         }
     }
 
-    public void genParentEntity(String name, String sourcePath, String packagePath) {
-        String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator);
+    public void genParentEntity(String name, String path, String packagePath) {
         String entityName = name + "Base.java";
-        File entityFile = new File(folderPath, entityName);
+        File entityFile = new File(path, entityName);
         // 不覆盖parent
         if (entityFile.exists()) {
             return;
         }
         try (FileWriter fw = new FileWriter(entityFile); BufferedWriter bw = new BufferedWriter(fw)) {
-            bw.write("package " + packagePath + ";");
+            bw.write(String.format("package %s.entity;", packagePath));
             bw.newLine();
             bw.newLine();
             bw.write("import org.babyfish.jimmer.sql.MappedSuperclass;");
