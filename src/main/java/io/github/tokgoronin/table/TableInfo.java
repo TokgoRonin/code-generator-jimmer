@@ -1,4 +1,4 @@
-package com.github.TokgoRonin.table;
+package io.github.tokgoronin.table;
 
 import java.util.List;
 

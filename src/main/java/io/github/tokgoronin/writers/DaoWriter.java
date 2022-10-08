@@ -1,7 +1,7 @@
-package com.github.TokgoRonin.writers;
+package io.github.tokgoronin.writers;
 
-import com.github.TokgoRonin.interfaces.GeneratorWriter;
-import com.github.TokgoRonin.table.TableInfo;
+import io.github.tokgoronin.interfaces.GeneratorWriter;
+import io.github.tokgoronin.table.TableInfo;
 
 import java.io.BufferedWriter;
 import java.io.File;

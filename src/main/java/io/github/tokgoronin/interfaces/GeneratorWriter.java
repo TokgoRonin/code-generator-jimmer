@@ -1,6 +1,6 @@
-package com.github.TokgoRonin.interfaces;
+package io.github.tokgoronin.interfaces;
 
-import com.github.TokgoRonin.table.TableInfo;
+import io.github.tokgoronin.table.TableInfo;
 
 import java.util.List;
 

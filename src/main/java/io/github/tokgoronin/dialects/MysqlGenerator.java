@@ -1,10 +1,10 @@
-package com.github.TokgoRonin.dialects;
+package io.github.tokgoronin.dialects;
 
-import com.github.TokgoRonin.interfaces.Generator;
-import com.github.TokgoRonin.mapping.SqlJavaTypeMapping;
-import com.github.TokgoRonin.table.FieldInfo;
-import com.github.TokgoRonin.table.TableInfo;
-import com.github.TokgoRonin.utils.CustomStringUtil;
+import io.github.tokgoronin.interfaces.Generator;
+import io.github.tokgoronin.mapping.SqlJavaTypeMapping;
+import io.github.tokgoronin.table.FieldInfo;
+import io.github.tokgoronin.table.TableInfo;
+import io.github.tokgoronin.utils.CustomStringUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

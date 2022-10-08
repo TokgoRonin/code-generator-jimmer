@@ -1,4 +1,4 @@
-package com.github.TokgoRonin.table;
+package io.github.tokgoronin.table;
 
 public class FieldInfo {
     private String sqlType;

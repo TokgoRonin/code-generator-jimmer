@@ -1,4 +1,4 @@
-package com.github.TokgoRonin.utils;
+package io.github.tokgoronin.utils;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

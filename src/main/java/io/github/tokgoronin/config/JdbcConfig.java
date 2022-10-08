@@ -1,4 +1,4 @@
-package com.github.TokgoRonin.config;
+package io.github.tokgoronin.config;
 
 public class JdbcConfig {
     private String driver;

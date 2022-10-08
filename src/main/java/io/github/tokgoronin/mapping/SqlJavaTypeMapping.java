@@ -1,4 +1,4 @@
-package com.github.TokgoRonin.mapping;
+package io.github.tokgoronin.mapping;
 
 import java.util.HashMap;
 import java.util.Map;

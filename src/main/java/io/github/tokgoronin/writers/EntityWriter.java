@@ -1,9 +1,9 @@
-package com.github.TokgoRonin.writers;
+package io.github.tokgoronin.writers;
 
-import com.github.TokgoRonin.interfaces.GeneratorWriter;
-import com.github.TokgoRonin.mapping.SqlJavaTypeMapping;
-import com.github.TokgoRonin.table.FieldInfo;
-import com.github.TokgoRonin.table.TableInfo;
+import io.github.tokgoronin.interfaces.GeneratorWriter;
+import io.github.tokgoronin.mapping.SqlJavaTypeMapping;
+import io.github.tokgoronin.table.FieldInfo;
+import io.github.tokgoronin.table.TableInfo;
 
 import java.io.*;
 import java.time.LocalDateTime;

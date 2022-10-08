@@ -1,11 +1,11 @@
-package com.github.TokgoRonin;
+package io.github.tokgoronin;
 
-import com.github.TokgoRonin.dialects.MysqlGenerator;
-import com.github.TokgoRonin.config.JdbcConfig;
-import com.github.TokgoRonin.interfaces.Generator;
-import com.github.TokgoRonin.table.TableInfo;
-import com.github.TokgoRonin.writers.DaoWriter;
-import com.github.TokgoRonin.writers.EntityWriter;
+import io.github.tokgoronin.dialects.MysqlGenerator;
+import io.github.tokgoronin.config.JdbcConfig;
+import io.github.tokgoronin.interfaces.Generator;
+import io.github.tokgoronin.table.TableInfo;
+import io.github.tokgoronin.writers.DaoWriter;
+import io.github.tokgoronin.writers.EntityWriter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
