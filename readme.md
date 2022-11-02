@@ -8,7 +8,7 @@ H2、Postgres不了解，SqlServer只在16年实习时使用过，所以该3种�
   <build>
         <plugins>
             <plugin>
-                <groupId>com.github.TokgoRonin</groupId>
+                <groupId>io.github.tokgoronin</groupId>
                 <artifactId>jimmerCodeGen-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
