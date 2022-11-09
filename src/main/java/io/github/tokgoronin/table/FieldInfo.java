@@ -6,8 +6,8 @@ public class FieldInfo {
     private String sqlName;
     private String javaName;
     private String comment;
-
     private Boolean nullAble;
+    private String key;
 
     public String getSqlType() {
         return sqlType;
@@ -57,6 +57,14 @@ public class FieldInfo {
         this.nullAble = nullAble;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     @Override
     public String toString() {
         return "FieldInfo{" +
@@ -66,6 +74,7 @@ public class FieldInfo {
                 ", javaName='" + javaName + '\'' +
                 ", comment='" + comment + '\'' +
                 ", nullAble=" + nullAble +
+                ", index='" + key + '\'' +
                 '}';
     }
 }

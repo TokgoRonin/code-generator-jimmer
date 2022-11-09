@@ -17,8 +17,8 @@ import java.util.*;
 
 @Mojo(name = "codeGen")
 public class CodeGenMojo extends AbstractMojo {
-    public static final String SHOW_TABLE_STATUS = "show table status";
-    public static final String SHOW_TABLE_FIELDS = "show full fields from %s";
+    private static final String TYPE_JAVA = "java";
+    private static final String TYPE_KOTLIN = "kotlin";
 
     private Generator generator;
     private final EntityWriter entityWriter = new EntityWriter();
@@ -36,8 +36,15 @@ public class CodeGenMojo extends AbstractMojo {
     private JdbcConfig jdbcConfig;
     @Parameter
     private boolean daos;
+    private String codeType;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+
+        if (!TYPE_JAVA.equals(codeType) && !TYPE_KOTLIN.equals(codeType)) {
+            this.getLog().error("codeType 必须是 java 或 kotlin 。");
+            throw new MojoFailureException("codeType 必须是 java 或 kotlin 。");
+        }
+
         String url = jdbcConfig.getUrl();
         String username = jdbcConfig.getUsername();
         String password = jdbcConfig.getPassword();
@@ -47,22 +54,24 @@ public class CodeGenMojo extends AbstractMojo {
         } catch (ClassNotFoundException e) {
             this.getLog().error("获取数据库驱动失败:" + e);
         }
-        try (Connection connection = DriverManager.getConnection(url, username, password);) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             if (driver.toLowerCase().contains("mysql")) {
                 generator = new MysqlGenerator();
                 // 读取表信息
                 List<TableInfo> tableInfoList = generator.getTableInfoList(connection, tables, tablePrefix);
                 // 生成entity
-                entityWriter.generate(sourcePath, packagePath, tableInfoList);
+                entityWriter.generate(sourcePath, packagePath, tableInfoList, codeType);
                 // 生成dao
                 if (daos) {
-                    daoWriter.generate(sourcePath, packagePath, tableInfoList);
+                    daoWriter.generate(sourcePath, packagePath, tableInfoList, codeType);
                 }
             } else {
                 this.getLog().error("暂不支持该数据库类型。");
+                throw new MojoFailureException("暂不支持该数据库类型。");
             }
         } catch (SQLException e) {
-            this.getLog().error("读取表结构失败：" + e);
+            this.getLog().error("读取表结构失败：" + e.getCause());
+            throw new MojoFailureException("读取表结构失败。");
         }
     }
 

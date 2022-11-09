@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DaoWriter implements GeneratorWriter {
     @Override
-    public void generate(String sourcePath, String packagePath, List<TableInfo> tableInfoList) {
+    public void generate(String sourcePath, String packagePath, List<TableInfo> tableInfoList, String type) {
         // 先生成目录
         String folderPath = (sourcePath + File.separator + packagePath).replace(".", File.separator) + File.separator + "dao" + File.separator;
         File folder = new File(folderPath);
@@ -49,7 +49,7 @@ public class DaoWriter implements GeneratorWriter {
             bw.newLine();
 
             bw.write("@Repository\n" +
-                    "public abstract class BaseDao<T extends Table<?>, E> {\n" +
+                    "public class BaseDao<T extends Table<?>, E> {\n" +
                     "\n" +
                     "    @Resource\n" +
                     "    private JSqlClient sqlClient;\n" +
@@ -94,8 +94,6 @@ public class DaoWriter implements GeneratorWriter {
                     "        return sqlClient.getEntities().findAll(entityClazz);\n" +
                     "    }\n" +
                     "\n" +
-                    "    public abstract List<E> findAllByPage(Class<T> entityTableClazz, int page, int size);\n" +
-                    "\n" +
                     "}\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -136,15 +134,6 @@ public class DaoWriter implements GeneratorWriter {
             bw.write("\t@Resource");
             bw.newLine();
             bw.write("\tprivate JSqlClient sqlClient;");
-            bw.newLine();
-            bw.newLine();
-            bw.write("\t@Override");
-            bw.newLine();
-            bw.write(String.format("\tpublic List<%s> findAllByPage(Class<%sTable> entityTableClazz, int page, int size) {", entityName, entityName));
-            bw.newLine();
-            bw.write("\t\treturn sqlClient.createQuery(entityTableClazz, RootSelectable::select).limit(size, page * size).execute();");
-            bw.newLine();
-            bw.write("\t}");
             bw.newLine();
             bw.newLine();
             bw.write("}");

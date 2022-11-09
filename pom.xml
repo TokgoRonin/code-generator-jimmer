@@ -4,7 +4,7 @@
 
     <groupId>io.github.tokgoronin</groupId>
     <artifactId>jimmerCodeGen-maven-plugin</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 
     <description>generate entity and dao for jimmer</description>
 
@@ -31,7 +31,7 @@
 
     <packaging>maven-plugin</packaging>
 
-    <name>jimmerCodeGen-maven-plugin Maven Plugin</name>
+    <name>jimmerCodeGen-maven-plugin</name>
 
     <!-- FIXME change it to the project's website -->
     <url>https://maven.apache.org</url>

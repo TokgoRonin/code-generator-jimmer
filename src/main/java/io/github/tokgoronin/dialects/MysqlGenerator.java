@@ -49,8 +49,7 @@ public class MysqlGenerator implements Generator {
                 tableInfo.setComment(tableComment);
                 // 这四个属性用于判断生成的entity中是否要导入对应的包
                 tableInfo.setFieldInfoList(fieldInfoList);
-                Set<String> fieldTypeSet = fieldInfoList.stream().map(FieldInfo::getJavaType)
-                                                        .collect(Collectors.toSet());
+                Set<String> fieldTypeSet = fieldInfoList.stream().map(FieldInfo::getJavaType).collect(Collectors.toSet());
                 tableInfo.setHaveLocalDate(fieldTypeSet.contains("LocalDate"));
                 tableInfo.setHaveLocalTime(fieldTypeSet.contains("LocalTime"));
                 tableInfo.setHaveLocalDateTime(fieldTypeSet.contains("LocalDateTime"));
@@ -66,7 +65,7 @@ public class MysqlGenerator implements Generator {
     @Override
     public List<FieldInfo> getFieldInfoList(Connection connection, String tableName) throws SQLException {
         List<FieldInfo> fieldInfoList = new ArrayList<>();
-        String sql = String.format(SHOW_TABLE_FIELDS, tableName);
+        final String sql = String.format(SHOW_TABLE_FIELDS, tableName);
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 String fieldName = rs.getString("field");
@@ -78,6 +77,7 @@ public class MysqlGenerator implements Generator {
                 String javaType = SqlJavaTypeMapping.TYPE.get(type);
                 boolean nullAble = rs.getBoolean("null");
                 String comment = rs.getString("comment");
+                String key = rs.getString("key");
 
                 FieldInfo fieldInfo = new FieldInfo();
                 fieldInfo.setSqlType(type);
@@ -86,6 +86,7 @@ public class MysqlGenerator implements Generator {
                 fieldInfo.setJavaName(javaName);
                 fieldInfo.setComment(comment);
                 fieldInfo.setNullAble(nullAble);
+                fieldInfo.setKey(key);
 
                 fieldInfoList.add(fieldInfo);
             }

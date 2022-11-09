@@ -12,7 +12,10 @@ H2、Postgres不了解，SqlServer只在16年实习时使用过，所以该3种�
                 <artifactId>jimmerCodeGen-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
-                    <!-- jdbc配置，必选项 -->
+                    <!-- 必选项：生成java代码或kotlin代码 -->
+                    <codeType>java</codeType>
+                    
+                    <!-- 必选项：jdbc配置 -->
                     <jdbcConfig>
                         <driver>com.mysql.jdbc.Driver</driver>
                         <url>jdbc:mysql://localhost:3306/databaseName?characterEncoding=utf-8&amp;useSSL=false&amp;allowMultiQueries=true</url>
@@ -48,16 +51,17 @@ H2、Postgres不了解，SqlServer只在16年实习时使用过，所以该3种�
     </build>
 
 ```
-运行该插件后生成的目录如下：
 
+运行该插件后生成的目录如下：
 ![img.png](img.png)
 
-注意事项：
+生成的实体接口如下：
+![img_1.png](img_1.png)
 
+生成的dao如下：
+![img_2.png](img_2.png)
+
+注意事项：
 1. 每张表生成的entity为2个接口，xxxBase接口每次生成时不会覆盖，用于编写关联关系、公用的属性等。
 xxx继承xxxBase，每次生成会覆盖xxx，所以不要修改xxx，否则每次生成前，自行保存修改。
-2. 如果配置了`<daos>true</daos>`则会生成对应的dao，其中BaseDao是一个抽象类，包含了基础的增删改查等操作，以及一个抽象接口：
-``` java
-public abstract List<E> findAllByPage(Class<T> entityTableClazz, int page, int size);
-```
-其他dao继承自BaseDao，自动生成时会自动实现该方法，但该方法目前很简陋，后续可能会有改动或删除。
+2. 如果配置了`<daos>true</daos>`则会生成对应的xxxDao和BaseDao，xxxDao继承BaseDao，BaseDao包含了增删改查、批量添加、批量删除等操作。
